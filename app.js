@@ -13,7 +13,7 @@ createApp({
             const apiKey = "D00E3E9FC27F147B5CBB0F6A2209AE48";
             const steamId = "76561198817285642";
 const proxy = "https://api.allorigins.win/get?url=";
-const apiUrl = encodeURIComponent(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&format=json&include_appinfo=true&include_played_free_games=true`);
+const apiUrl = encodeURIComponent(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=D00E3E9FC27F147B5CBB0F6A2209AE48&steamid=76561198817285642&format=json&include_appinfo=true&include_played_free_games=true`);
 
 const loadGames = async () => {
     try {
