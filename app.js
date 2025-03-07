@@ -12,18 +12,21 @@ createApp({
         const loadGames = async () => {
             const apiKey = "D00E3E9FC27F147B5CBB0F6A2209AE48";
             const steamId = "76561198817285642";
-            const proxy = "https://cors-anywhere.herokuapp.com/";
-const apiUrl = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&format=json&include_appinfo=true&include_played_free_games=true`;
-const url = proxy + apiUrl;
+const proxy = "https://api.allorigins.win/get?url=";
+const apiUrl = encodeURIComponent(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&format=json&include_appinfo=true&include_played_free_games=true`);
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                games.value = data.response.games;
-            } catch (error) {
-                console.error("Error al cargar los juegos:", error);
-            }
-        };
+const loadGames = async () => {
+    try {
+        const response = await fetch(proxy + apiUrl);
+        const data = await response.json();
+        const gamesData = JSON.parse(data.contents); // AllOrigins devuelve JSON dentro de "contents"
+        games.value = gamesData.response.games;
+    } catch (error) {
+        console.error("Error al cargar los juegos:", error);
+    }
+};
+
+loadGames(); // Llamar a la función cuando se carga la página
 
         // Filtrar y ordenar juegos
         const filteredGames = computed(() => {
