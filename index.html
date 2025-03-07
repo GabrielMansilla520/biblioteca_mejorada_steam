@@ -1,0 +1,74 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Biblioteca de Steam Mejorada</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" width="32" height="32">
+                        <path fill="#1b2838" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 22.5C6.2 22.5 1.5 17.8 1.5 12S6.2 1.5 12 1.5 22.5 6.2 22.5 12 17.8 22.5 12 22.5z"/>
+                    </svg>
+                    <h1>Mi Biblioteca</h1>
+                </div>
+                <div class="search-bar">
+                    <input type="text" v-model="searchQuery" placeholder="Buscar juegos...">
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="filters">
+                <select v-model="sortBy">
+                    <option value="name">Nombre</option>
+                    <option value="playtime">Tiempo jugado</option>
+                    <option value="recent">Jugado recientemente</option>
+                </select>
+            </div>
+
+            <div class="games-grid">
+                <div v-for="game in filteredGames" 
+                     :key="game.appid" 
+                     class="game-card"
+                     @mouseover="showGameDetails(game)"
+                     @mouseleave="hideGameDetails">
+                    <div class="game-image">
+                        <img :src="'https://steamcdn-a.akamaihd.net/steam/apps/' + game.appid + '/header.jpg'" :alt="game.name">
+                        <div class="game-overlay">
+                            <div class="playtime">{{ formatPlaytime(game.playtime_forever) }}</div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3>{{ game.name }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="selectedGame" class="game-details" :style="detailsPosition">
+                <h2>{{ selectedGame.name }}</h2>
+                <p>Tiempo total: {{ formatPlaytime(selectedGame.playtime_forever) }}</p>
+                <p v-if="selectedGame.playtime_2weeks">
+                    Últimas 2 semanas: {{ formatPlaytime(selectedGame.playtime_2weeks) }}
+                </p>
+                <a :href="'https://store.steampowered.com/app/' + selectedGame.appid" 
+                   target="_blank" 
+                   class="store-link">
+                    Ver en Steam
+                </a>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
