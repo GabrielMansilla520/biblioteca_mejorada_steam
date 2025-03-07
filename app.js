@@ -8,30 +8,31 @@ createApp({
         const selectedGame = ref(null);
         const detailsPosition = ref({});
 
+        // Configuración de la API de Steam con proxy
+        const apiKey = "D00E3E9FC27F147B5CBB0F6A2209AE48";
+        const steamId = "76561198817285642";
+        const proxy = "https://api.allorigins.win/get?url=";
+        const apiUrl = encodeURIComponent(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&format=json&include_appinfo=true&include_played_free_games=true`);
+
         // Función para cargar los juegos
         const loadGames = async () => {
-            const apiKey = "D00E3E9FC27F147B5CBB0F6A2209AE48";
-            const steamId = "76561198817285642";
-const proxy = "https://api.allorigins.win/get?url=";
-const apiUrl = encodeURIComponent(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=D00E3E9FC27F147B5CBB0F6A2209AE48&steamid=76561198817285642&format=json&include_appinfo=true&include_played_free_games=true`);
+            try {
+                const response = await fetch(proxy + apiUrl);
+                const data = await response.json();
+                const gamesData = JSON.parse(data.contents); // AllOrigins devuelve JSON dentro de "contents"
+                games.value = gamesData.response.games;
+            } catch (error) {
+                console.error("Error al cargar los juegos:", error);
+            }
+        };
 
-const loadGames = async () => {
-    try {
-        const response = await fetch(proxy + apiUrl);
-        const data = await response.json();
-        const gamesData = JSON.parse(data.contents); // AllOrigins devuelve JSON dentro de "contents"
-        games.value = gamesData.response.games;
-    } catch (error) {
-        console.error("Error al cargar los juegos:", error);
-    }
-};
-
-loadGames(); // Llamar a la función cuando se carga la página
+        // Cargar juegos al iniciar
+        loadGames();
 
         // Filtrar y ordenar juegos
         const filteredGames = computed(() => {
             let filtered = [...games.value];
-            
+
             if (searchQuery.value) {
                 filtered = filtered.filter(game => 
                     game.name.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -75,9 +76,6 @@ loadGames(); // Llamar a la función cuando se carga la página
             selectedGame.value = null;
         };
 
-        // Cargar juegos al iniciar
-        loadGames();
-
         return {
             games,
             searchQuery,
@@ -91,4 +89,3 @@ loadGames(); // Llamar a la función cuando se carga la página
         };
     }
 }).mount('#app');
-
