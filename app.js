@@ -12,7 +12,9 @@ createApp({
         const loadGames = async () => {
             const apiKey = "D00E3E9FC27F147B5CBB0F6A2209AE48";
             const steamId = "76561198817285642";
-            const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&format=json&include_appinfo=true&include_played_free_games=true`;
+            const proxy = "https://cors-anywhere.herokuapp.com/";
+const apiUrl = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&format=json&include_appinfo=true&include_played_free_games=true`;
+const url = proxy + apiUrl;
 
             try {
                 const response = await fetch(url);
